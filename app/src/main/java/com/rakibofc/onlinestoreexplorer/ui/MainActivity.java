@@ -1,9 +1,10 @@
-package com.rakibofc.onlinestoreexplorer;
+package com.rakibofc.onlinestoreexplorer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.rakibofc.onlinestoreexplorer.adapter.StoreAdapter;
 import com.rakibofc.onlinestoreexplorer.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.rakibofc.onlinestoreexplorer;
+package com.rakibofc.onlinestoreexplorer.model;
 
 public class Store {
 
