@@ -11,12 +11,14 @@ import com.rakibofc.onlinestoreexplorer.R;
 import com.rakibofc.onlinestoreexplorer.model.Store;
 import com.rakibofc.onlinestoreexplorer.viewholder.StoreViewHolder;
 
+import java.util.List;
+
 public class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
 
-    private final int noOfStore;
+    private final List<Store> storeList;
 
-    public StoreAdapter(int noOfStore) {
-        this.noOfStore = noOfStore;
+    public StoreAdapter(List<Store> storeList) {
+        this.storeList = storeList;
     }
 
     @NonNull
@@ -29,12 +31,12 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull StoreViewHolder holder, int position) {
 
-        Store store = new Store(position, "Store Name", "Store Address");
+        Store store = storeList.get(position);
         holder.bind(store);
     }
 
     @Override
     public int getItemCount() {
-        return noOfStore;
+        return storeList.size();
     }
 }
