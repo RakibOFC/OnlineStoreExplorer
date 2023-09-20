@@ -7,13 +7,19 @@ import androidx.lifecycle.ViewModel;
 import com.rakibofc.onlinestoreexplorer.helper.ApiHelper;
 import com.rakibofc.onlinestoreexplorer.helper.DataFetchingListener;
 import com.rakibofc.onlinestoreexplorer.model.Store;
+import com.rakibofc.onlinestoreexplorer.receiver.ConnectionReceiver;
 
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
+    private final MutableLiveData<Boolean> isNetworkConnected = new MutableLiveData<>();
     private final MutableLiveData<List<Store>> storeListLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> statusLiveData = new MutableLiveData<>();
+
+    public LiveData<Boolean> getIsNetworkConnected() {
+        return isNetworkConnected;
+    }
 
     public LiveData<List<Store>> getStoreList() {
         return storeListLiveData;
@@ -21,6 +27,10 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<Integer> getStatus() {
         return statusLiveData;
+    }
+
+    public void initInternetConnection(ConnectionReceiver connectionReceiver) {
+        connectionReceiver.setNetworkStateChangeListener(isNetworkConnected::postValue);
     }
 
     public void fetchStoreData(int pageNo) {

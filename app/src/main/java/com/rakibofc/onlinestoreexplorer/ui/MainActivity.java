@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.rakibofc.onlinestoreexplorer.R;
 import com.rakibofc.onlinestoreexplorer.adapter.StoreAdapter;
 import com.rakibofc.onlinestoreexplorer.databinding.ActivityMainBinding;
 import com.rakibofc.onlinestoreexplorer.receiver.ConnectionReceiver;
@@ -22,7 +26,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private IntentFilter intentFilter;
-    private ConnectionReceiver receiver;
+    private ConnectionReceiver connectionReceiver;
+    private boolean isNoInternetMessageSent;
     private int pageNo = 1;
 
     @Override
@@ -30,25 +35,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         StoreAdapter storeAdapter = new StoreAdapter(new ArrayList<>());
 
         // Initialize connection status receiver
         intentFilter = new IntentFilter();
-        receiver = new ConnectionReceiver();
+        connectionReceiver = new ConnectionReceiver();
 
-        setContentView(binding.getRoot());
+        setContentView(view);
 
         binding.rvStoreList.setAdapter(storeAdapter);
 
         // Fetch data by view model
+        viewModel.initInternetConnection(connectionReceiver);
         viewModel.fetchStoreData(pageNo);
 
-        // Add action in intent filter
-        intentFilter.addAction(Constants.CONNECTIVITY_ACTION);
-
-        // Get data from view model
-        viewModel.getStoreList().observe(this, storeAdapter::addData);
+        // Handle live data from view model
+        handleLiveData(viewModel, storeAdapter, view);
 
         binding.rvStoreList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -75,17 +79,37 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        // Add action in intent filter
+        intentFilter.addAction(Constants.CONNECTIVITY_ACTION);
+    }
+
+    private void handleLiveData(MainViewModel viewModel, StoreAdapter storeAdapter, View view) {
+
+        viewModel.getIsNetworkConnected().observe(this, isConnected -> {
+
+            if (isConnected && isNoInternetMessageSent) {
+
+                Snackbar.make(view, R.string.internet_connection_restored_msg, Toast.LENGTH_SHORT).show();
+                isNoInternetMessageSent = false;
+
+            } else if (!isConnected) {
+                Snackbar.make(view, R.string.no_connection_msg, Toast.LENGTH_SHORT).show();
+                isNoInternetMessageSent = true;
+            }
+        });
+        viewModel.getStoreList().observe(this, storeAdapter::addData);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(receiver, intentFilter);
+        registerReceiver(connectionReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+        unregisterReceiver(connectionReceiver);
     }
 }

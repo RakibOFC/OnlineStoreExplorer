@@ -6,14 +6,16 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.widget.Toast;
-
-import com.rakibofc.onlinestoreexplorer.R;
+import com.rakibofc.onlinestoreexplorer.helper.NetworkStateChangeListener;
 import com.rakibofc.onlinestoreexplorer.utility.Constants;
 
 public class ConnectionReceiver extends BroadcastReceiver {
 
-    private boolean isNoInternetMessageSent;
+    private NetworkStateChangeListener networkStateChangeListener;
+
+    public void setNetworkStateChangeListener(NetworkStateChangeListener listener) {
+        this.networkStateChangeListener = listener;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -22,16 +24,8 @@ public class ConnectionReceiver extends BroadcastReceiver {
         boolean isConnected = isNetworkAvailable(context);
 
         if (actionOfIntent != null && actionOfIntent.equals(Constants.CONNECTIVITY_ACTION)) {
-
-            if (isConnected && isNoInternetMessageSent) {
-
-                // Toast restored message if "no_connection_msg" already shown otherwise no need to show
-                Toast.makeText(context, R.string.internet_connection_restored_msg, Toast.LENGTH_SHORT).show();
-                isNoInternetMessageSent = false;
-
-            } else if (!isConnected) {
-                Toast.makeText(context, R.string.no_connection_msg, Toast.LENGTH_SHORT).show();
-                isNoInternetMessageSent = true;
+            if (networkStateChangeListener != null) {
+                networkStateChangeListener.onNetworkStateChanged(isConnected);
             }
         }
     }
