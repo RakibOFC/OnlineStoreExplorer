@@ -39,4 +39,10 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
     public int getItemCount() {
         return storeList.size();
     }
+
+    public void addData(List<Store> stores) {
+        int startPosition = storeList.size();
+        storeList.addAll(stores);
+        notifyItemRangeInserted(startPosition, stores.size());
+    }
 }
