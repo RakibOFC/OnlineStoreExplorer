@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleLiveData(MainViewModel viewModel, StoreAdapter storeAdapter, View view) {
 
+        // Get connection status
         viewModel.getIsNetworkConnected().observe(this, isConnected -> {
 
             if (isConnected && isNoInternetMessageSent) {
@@ -98,7 +99,19 @@ public class MainActivity extends AppCompatActivity {
                 isNoInternetMessageSent = true;
             }
         });
+
+        // Get recycler view data from view model
         viewModel.getStoreList().observe(this, storeAdapter::addData);
+
+        // Get error status code from view model
+        viewModel.getStatus().observe(this, status -> {
+
+            if (status == 404) {
+                Toast.makeText(this, R.string.not_found_msg, Toast.LENGTH_SHORT).show();
+
+            } else
+                Toast.makeText(this, R.string.something_went_wrong_msg, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
