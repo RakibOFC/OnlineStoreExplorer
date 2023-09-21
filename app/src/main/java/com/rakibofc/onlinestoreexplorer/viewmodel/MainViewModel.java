@@ -6,26 +6,24 @@ import androidx.lifecycle.ViewModel;
 
 import com.rakibofc.onlinestoreexplorer.helper.ApiHelper;
 import com.rakibofc.onlinestoreexplorer.helper.DataFetchingListener;
-import com.rakibofc.onlinestoreexplorer.model.Store;
+import com.rakibofc.onlinestoreexplorer.model.StoreInfo;
 import com.rakibofc.onlinestoreexplorer.receiver.ConnectionReceiver;
-
-import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isNetworkConnected = new MutableLiveData<>();
-    private final MutableLiveData<List<Store>> storeListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<StoreInfo> storeInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> statusLiveData = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsNetworkConnected() {
         return isNetworkConnected;
     }
 
-    public LiveData<List<Store>> getStoreList() {
-        return storeListLiveData;
+    public MutableLiveData<StoreInfo> getStoreInfoLiveData() {
+        return storeInfoLiveData;
     }
 
-    public LiveData<Integer> getStatus() {
+    public MutableLiveData<Integer> getStatusLiveData() {
         return statusLiveData;
     }
 
@@ -34,10 +32,11 @@ public class MainViewModel extends ViewModel {
     }
 
     public void fetchStoreData(int pageNo) {
-        ApiHelper.getStores(pageNo, new DataFetchingListener<List<Store>>() {
+        ApiHelper.getStores(pageNo, new DataFetchingListener<StoreInfo>() {
             @Override
-            public void onDataFetched(List<Store> response) {
-                storeListLiveData.postValue(response);
+            public void onDataFetched(StoreInfo response) {
+
+                storeInfoLiveData.postValue(response);
             }
 
             @Override

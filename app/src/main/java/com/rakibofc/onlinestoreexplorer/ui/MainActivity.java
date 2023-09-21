@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.rakibofc.onlinestoreexplorer.R;
 import com.rakibofc.onlinestoreexplorer.adapter.StoreAdapter;
 import com.rakibofc.onlinestoreexplorer.databinding.ActivityMainBinding;
+import com.rakibofc.onlinestoreexplorer.model.Page;
 import com.rakibofc.onlinestoreexplorer.receiver.ConnectionReceiver;
 import com.rakibofc.onlinestoreexplorer.utility.Constants;
 import com.rakibofc.onlinestoreexplorer.viewmodel.MainViewModel;
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ConnectionReceiver connectionReceiver;
     private boolean isNoInternetMessageSent;
     private int pageNo = 1;
+    private Page pageInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +63,16 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int itemCount = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
 
-                if (layoutManager != null) {
+                if (layoutManager != null && pageInfo != null) {
                     int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
 
-                    if (lastItem + 1 == itemCount) {
+                    if (lastItem + 1 == itemCount &&
+                            pageNo < pageInfo.getLastPage() &&
+                            pageNo <= pageInfo.getCurrentPage()) {
+
                         pageNo++;
                         viewModel.fetchStoreData(pageNo);
-                        Log.e("IfPageNo", pageNo + "");
                     }
-                    Log.e("PageNo", pageNo + "");
                 }
             }
 
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPageInfoSheet() {
         PageInfoSheetFragment fragment = PageInfoSheetFragment.newInstance();
+        fragment.setPageInfo(pageInfo);
         fragment.show(getSupportFragmentManager(), Constants.SHEET_TAG);
     }
 
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             if (isConnected && isNoInternetMessageSent) {
 
                 Snackbar.make(view, R.string.internet_connection_restored_msg, Toast.LENGTH_SHORT).show();
+                viewModel.fetchStoreData(pageNo);
                 isNoInternetMessageSent = false;
 
             } else if (!isConnected) {
@@ -107,11 +111,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Get recycler view data from view model
-        viewModel.getStoreList().observe(this, storeAdapter::addData);
+        // Get store info data from view model
+        viewModel.getStoreInfoLiveData().observe(this, storeInfo -> {
+
+            storeAdapter.addData(storeInfo.getStoreList());
+            pageInfo = storeInfo.getPage();
+        });
 
         // Get error status code from view model
-        viewModel.getStatus().observe(this, status -> {
+        viewModel.getStatusLiveData().observe(this, status -> {
 
             if (status == 404) {
                 Toast.makeText(this, R.string.not_found_msg, Toast.LENGTH_SHORT).show();
