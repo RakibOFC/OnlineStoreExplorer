@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rakibofc.onlinestoreexplorer.R;
+import com.rakibofc.onlinestoreexplorer.helper.ItemClickListener;
 import com.rakibofc.onlinestoreexplorer.model.Store;
 import com.rakibofc.onlinestoreexplorer.viewholder.StoreViewHolder;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
 
     private final List<Store> storeList;
+    private final ItemClickListener itemClickListener;
 
-    public StoreAdapter(List<Store> storeList) {
+    public StoreAdapter(List<Store> storeList, ItemClickListener itemClickListener) {
         this.storeList = storeList;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -32,7 +35,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
     public void onBindViewHolder(@NonNull StoreViewHolder holder, int position) {
 
         Store store = storeList.get(position);
-        holder.bind(store);
+        holder.bind(store, itemClickListener, position);
     }
 
     @Override

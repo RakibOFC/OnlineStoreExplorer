@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rakibofc.onlinestoreexplorer.R;
+import com.rakibofc.onlinestoreexplorer.helper.ItemClickListener;
 import com.rakibofc.onlinestoreexplorer.model.Store;
 
 public class StoreViewHolder extends RecyclerView.ViewHolder {
@@ -23,9 +24,11 @@ public class StoreViewHolder extends RecyclerView.ViewHolder {
         tvStoreAddress = itemView.findViewById(R.id.tv_store_address);
     }
 
-    public void bind(Store store) {
+    public void bind(Store store, ItemClickListener itemClickListener, int position) {
         tvStoreId.setText(String.valueOf(store.getId()));
         tvStoreName.setText(store.getName());
         tvStoreAddress.setText(store.getAddress());
+
+        itemView.setOnClickListener(v -> itemClickListener.onItemClick(v, store, position));
     }
 }

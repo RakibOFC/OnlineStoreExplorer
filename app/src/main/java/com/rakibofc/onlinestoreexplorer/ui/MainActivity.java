@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,7 +18,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.rakibofc.onlinestoreexplorer.R;
 import com.rakibofc.onlinestoreexplorer.adapter.StoreAdapter;
 import com.rakibofc.onlinestoreexplorer.databinding.ActivityMainBinding;
+import com.rakibofc.onlinestoreexplorer.helper.ItemClickListener;
 import com.rakibofc.onlinestoreexplorer.model.Page;
+import com.rakibofc.onlinestoreexplorer.model.Store;
 import com.rakibofc.onlinestoreexplorer.receiver.ConnectionReceiver;
 import com.rakibofc.onlinestoreexplorer.utility.Constants;
 import com.rakibofc.onlinestoreexplorer.viewmodel.MainViewModel;
@@ -23,7 +28,7 @@ import com.rakibofc.onlinestoreexplorer.viewmodel.MainViewModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemClickListener {
 
     private IntentFilter intentFilter;
     private ConnectionReceiver connectionReceiver;
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        StoreAdapter storeAdapter = new StoreAdapter(new ArrayList<>());
+        StoreAdapter storeAdapter = new StoreAdapter(new ArrayList<>(), this);
 
         // Initialize connection status receiver
         intentFilter = new IntentFilter();
@@ -139,5 +144,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(connectionReceiver);
+    }
+
+    @Override
+    public void onItemClick(View v, Store storeData, int position) {
+
+        Intent storeIntent = new Intent(getApplicationContext(), StoreActivity.class);
+        Pair<View, String> pairs = new Pair<>(v, getString(R.string.name_to_name_trans));
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
+
+        storeIntent.putExtra(Constants.STORE_NAME_KEY, storeData.getName());
+        storeIntent.putExtra(Constants.STORE_ID_KEY, storeData.getId());
+        storeIntent.putExtra(Constants.STORE_ADDRESS_KEY, storeData.getAddress());
+        startActivity(storeIntent, options.toBundle());
     }
 }

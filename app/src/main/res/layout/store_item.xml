@@ -46,7 +46,8 @@
                 android:layout_marginBottom="@dimen/_2dp"
                 android:text="@string/store_name_text"
                 android:textSize="@dimen/_18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:transitionName="@string/name_to_name_trans" />
 
             <TextView
                 android:id="@+id/tv_store_address"

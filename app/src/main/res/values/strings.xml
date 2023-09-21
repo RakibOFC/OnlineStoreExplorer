@@ -23,4 +23,8 @@
     <string name="to_d">**To:** %d</string>
     <string name="dummy_path_text">Path: http://128.199.215.102:4040/api/stores</string>
     <string name="path_s">**Path:** %s</string>
+    <string name="carts_icon_text">Carts Icon</string>
+    <string name="name_to_name_trans">Name to name transition</string>
+    <string name="_1">1</string>
+    <string name="dummy_address">182 Misael Greens Suite 459\nWest Kim, CT 57048</string>
 </resources>

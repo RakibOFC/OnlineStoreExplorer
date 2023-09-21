@@ -19,11 +19,11 @@ public class MainViewModel extends ViewModel {
         return isNetworkConnected;
     }
 
-    public MutableLiveData<StoreInfo> getStoreInfoLiveData() {
+    public LiveData<StoreInfo> getStoreInfoLiveData() {
         return storeInfoLiveData;
     }
 
-    public MutableLiveData<Integer> getStatusLiveData() {
+    public LiveData<Integer> getStatusLiveData() {
         return statusLiveData;
     }
 
