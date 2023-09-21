@@ -31,4 +31,17 @@
         tools:itemCount="10"
         tools:listitem="@layout/store_item" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/_16dp"
+        android:backgroundTint="@color/seed"
+        android:contentDescription="@string/page_info_text"
+        android:text="@string/page_info_text"
+        app:srcCompat="@drawable/baseline_info_24"
+        app:tint="@color/md_theme_light_onSecondary" />
+
 </RelativeLayout>

@@ -7,4 +7,19 @@
     <string name="no_connection_msg">No internet connection</string>
     <string name="not_found_msg">Not found</string>
     <string name="something_went_wrong_msg">Something went wrong</string>
+    <string name="page_info_text">Page Info</string>
+    <string name="ok_text">OK</string>
+    <string name="dummy_total_item_550_text">Total Item: 550</string>
+    <string name="total_item_d">Total Item: %d</string>
+    <string name="dummy_total_page_55_text">Total Page: 55</string>
+    <string name="total_page_d">Total Page: %d</string>
+    <string name="dummy_lastly_loaded_page_text">Lastly Loaded Page: 1</string>
+    <string name="lastly_loaded_page_d">Lastly Loaded Page: %d</string>
+    <string name="dummy_per_page_10_text">Per Page: 10</string>
+    <string name="per_page_d">Per Page: %d</string>
+    <string name="dummy_from_1_text">From: 1</string>
+    <string name="from_d">From: %d</string>
+    <string name="dummy_to_10_text">To: 10</string>
+    <string name="to_d">To: %d</string>
+    <string name="dummy_path_text"><b>Path:</b> http://128.199.215.102:4040/api/stores</string>
 </resources>

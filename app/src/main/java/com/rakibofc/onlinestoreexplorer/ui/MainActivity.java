@@ -82,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Add action in intent filter
         intentFilter.addAction(Constants.CONNECTIVITY_ACTION);
+
+        binding.fabInfo.setOnClickListener(v -> showPageInfoSheet());
+    }
+
+    private void showPageInfoSheet() {
+        PageInfoSheetFragment fragment = PageInfoSheetFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), Constants.SHEET_TAG);
     }
 
     private void handleLiveData(MainViewModel viewModel, StoreAdapter storeAdapter, View view) {
