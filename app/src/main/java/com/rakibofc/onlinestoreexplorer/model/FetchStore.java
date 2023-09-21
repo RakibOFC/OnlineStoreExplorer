@@ -79,7 +79,7 @@ public class FetchStore {
         private String path;
 
         @SerializedName("per_page")
-        private String perPage;
+        private int perPage;
 
         private int to;
         private int total;
@@ -100,7 +100,7 @@ public class FetchStore {
             return path;
         }
 
-        public String getPerPage() {
+        public int getPerPage() {
             return perPage;
         }
 

@@ -3,7 +3,9 @@ package com.rakibofc.onlinestoreexplorer.helper;
 import androidx.annotation.NonNull;
 
 import com.rakibofc.onlinestoreexplorer.model.FetchStore;
+import com.rakibofc.onlinestoreexplorer.model.Page;
 import com.rakibofc.onlinestoreexplorer.model.Store;
+import com.rakibofc.onlinestoreexplorer.model.StoreInfo;
 import com.rakibofc.onlinestoreexplorer.restapi.ApiClient;
 import com.rakibofc.onlinestoreexplorer.restapi.ApiService;
 
@@ -16,7 +18,7 @@ import retrofit2.Response;
 
 public class ApiHelper {
 
-    public static void getStores(int pageNo, DataFetchingListener<List<Store>> storesListener) {
+    public static void getStores(int pageNo, DataFetchingListener<StoreInfo> storesListener) {
 
         ApiService apiService = ApiClient.getInstance().create(ApiService.class);
         Call<FetchStore> fetchStoreCall = apiService.getStore(pageNo);
@@ -32,11 +34,15 @@ public class ApiHelper {
                     if (fetchStore != null) {
 
                         List<Store> storeList = new ArrayList<>();
+                        FetchStore.Meta meta = fetchStore.getMeta();
+                        Page page = new Page(meta.getCurrentPage(), meta.getFrom(),
+                                meta.getLastPage(), meta.getPath(), meta.getPerPage(),
+                                meta.getTo(), meta.getTotal());
 
                         for (FetchStore.StoreData storeData : fetchStore.getStoreDataList()) {
                             storeList.add(new Store(storeData.getId(), storeData.getName(), storeData.getAddress()));
                         }
-                        storesListener.onDataFetched((storeList));
+                        storesListener.onDataFetched(new StoreInfo(storeList, page));
 
                     } else storesListener.onFailed(0);
 
